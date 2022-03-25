@@ -66,13 +66,15 @@ class _RatingWidgetState extends State<RatingWidget> {
           childAspectRatio: 2.9,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: List.from(controller.ratingModel.ratingConfig?.items.map(
-                (criterion) => CriterionButton(
-                  text: criterion.name,
-                  onSelectChange: (selected) => controller.ratingCubit.selectedCriterionsUpdate(criterion, selected),
-                ),
-              ) ??
-              [widget.bodyWidget]),
+          children: controller.ratingModel.ratingConfig?.items
+                  .map(
+                    (criterion) => CriterionButton(
+                      text: criterion.name,
+                      onSelectChange: (selected) => controller.ratingCubit.selectedCriterionsUpdate(criterion, selected),
+                    ),
+                  )
+                  .toList() ??
+              [if (widget.bodyWidget != null) widget.bodyWidget!],
         ),
         const SizedBox(height: 20),
       ],
