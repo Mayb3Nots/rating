@@ -82,7 +82,7 @@ class DefaultButton extends StatelessWidget {
       constraints: BoxConstraints(minWidth: width ?? double.infinity),
       height: height ?? 45.0,
       child: outline
-          ? OutlinedButton(onPressed: onPressed, style: style, child: content)
+          ? ElevatedButton(onPressed: onPressed, style: style, child: content)
           : TextButton(onPressed: onPressed, style: style, child: content),
     );
   }
