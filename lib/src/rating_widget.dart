@@ -85,8 +85,7 @@ class _RatingWidgetState extends State<RatingWidget> {
           ignoring: isLoading,
           child: Container(
             decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                color: Colors.red, borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
             child: AnimatedPadding(
               duration: animationDuration,
               curve: animationCurve,
@@ -94,16 +93,11 @@ class _RatingWidgetState extends State<RatingWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  UnconstrainedBox(
-                    child: Container(
-                      height: 5,
-                      width: 40,
-                      margin: const EdgeInsets.only(top: 15, bottom: 10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                      child: const ColoredBox(
-                        color: Colors.grey,
-                      ),
-                    ),
+                  Container(
+                    height: 5,
+                    width: 40,
+                    margin: const EdgeInsets.only(top: 15, bottom: 10),
+                    decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(20)),
                   ),
                   const SizedBox(height: 10),
                   if (controller.ratingModel.title != null) ...{
