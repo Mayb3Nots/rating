@@ -4,13 +4,13 @@ class RatingModel {
   final int id;
   final String? title;
   final String? subtitle;
-  final RatingConfigModel ratingConfig;
+  final RatingConfigModel? ratingConfig;
 
   RatingModel({
     required this.id,
     required this.title,
     required this.subtitle,
-    required this.ratingConfig,
+    this.ratingConfig,
   });
 
   RatingModel copyWith({

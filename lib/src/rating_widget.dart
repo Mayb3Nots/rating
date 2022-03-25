@@ -36,14 +36,14 @@ class _RatingWidgetState extends State<RatingWidget> {
     super.dispose();
   }
 
-  String get ratingSurvey {
+  String? get ratingSurvey {
     final options = [
       '',
-      controller.ratingModel.ratingConfig.ratingSurvey1,
-      controller.ratingModel.ratingConfig.ratingSurvey2,
-      controller.ratingModel.ratingConfig.ratingSurvey3,
-      controller.ratingModel.ratingConfig.ratingSurvey4,
-      controller.ratingModel.ratingConfig.ratingSurvey5,
+      controller.ratingModel.ratingConfig?.ratingSurvey1,
+      controller.ratingModel.ratingConfig?.ratingSurvey2,
+      controller.ratingModel.ratingConfig?.ratingSurvey3,
+      controller.ratingModel.ratingConfig?.ratingSurvey4,
+      controller.ratingModel.ratingConfig?.ratingSurvey5,
     ];
     return options.length > selectedRate ? options[selectedRate] : options.first;
   }
@@ -54,10 +54,11 @@ class _RatingWidgetState extends State<RatingWidget> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 14),
-        Text(
-          ratingSurvey,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-        ),
+        if (ratingSurvey != null)
+          Text(
+            ratingSurvey!,
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
         const SizedBox(height: 20),
         GridView.count(
           crossAxisCount: 2,
@@ -66,7 +67,7 @@ class _RatingWidgetState extends State<RatingWidget> {
           childAspectRatio: 2.9,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: List.from(controller.ratingModel.ratingConfig.items.map(
+          children: List.from(controller.ratingModel.ratingConfig!.items.map(
             (criterion) => CriterionButton(
               text: criterion.name,
               onSelectChange: (selected) => controller.ratingCubit.selectedCriterionsUpdate(criterion, selected),
