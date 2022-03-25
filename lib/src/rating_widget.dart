@@ -9,8 +9,9 @@ import 'widgets/stars_widget.dart';
 
 class RatingWidget extends StatefulWidget {
   final RatingController controller;
-  const RatingWidget({Key? key, required this.controller, this.bodyWidget}) : super(key: key);
+  const RatingWidget({Key? key, required this.controller, this.bodyWidget, this.getComment}) : super(key: key);
   final Widget? bodyWidget;
+  final String? Function()? getComment;
   @override
   _RatingWidgetState createState() => _RatingWidgetState();
 }
@@ -152,7 +153,13 @@ class _RatingWidgetState extends State<RatingWidget> {
                             textColor: Theme.of(context).colorScheme.onPrimary,
                             color: Theme.of(context).colorScheme.primary,
                             outlineColor: Theme.of(context).colorScheme.primary,
-                            onPressed: () => controller.ratingCubit.saveRate(selectedRate),
+                            onPressed: () {
+                              String? comment;
+                              if (widget.getComment != null) {
+                                comment = widget.getComment!();
+                              }
+                              controller.ratingCubit.saveRate(selectedRate, comment);
+                            },
                             isLoading: isLoading,
                           ),
                         ),

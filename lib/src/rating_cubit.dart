@@ -9,7 +9,7 @@ import 'rating_state.dart';
 export 'rating_state.dart';
 
 typedef IgnoreForEverCallback = Future<void> Function();
-typedef SaveRatingCallback = Future<void> Function(int rate, List<RatingCriterionModel> selectedCriterions);
+typedef SaveRatingCallback = Future<void> Function(int rate, String? commnet, List<RatingCriterionModel> selectedCriterions);
 
 class RatingCubit extends Cubit<RatingState> {
   final IgnoreForEverCallback _ignoreForEverCallback;
@@ -37,10 +37,10 @@ class RatingCubit extends Cubit<RatingState> {
     emit(SelectedCriterionsState(selectedCriterions));
   }
 
-  void saveRate(int rate) async {
+  void saveRate(int rate, String? comment) async {
     try {
       emit(LoadingState("Enviando Avaliação..."));
-      await _saveRatingCallback.call(rate, selectedCriterions.toList());
+      await _saveRatingCallback.call(rate, comment, selectedCriterions.toList());
       emit(CloseDialogState(false));
     } catch (ex, stack) {
       debugPrint('$ex');

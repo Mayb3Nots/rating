@@ -177,7 +177,7 @@ class MockRatingController extends RatingController {
   }
 
   @override
-  Future<void> saveRatingCallback(int rate, List<RatingCriterionModel> selectedCriterions) async {
+  Future<void> saveRatingCallback(int rate, String? comment, List<RatingCriterionModel> selectedCriterions) async {
     print('Rating saved!\nRate: $rate\nsSelectedItems: $selectedCriterions');
     await Future.delayed(const Duration(seconds: 3));
   }
