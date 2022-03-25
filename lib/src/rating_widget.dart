@@ -85,7 +85,8 @@ class _RatingWidgetState extends State<RatingWidget> {
           ignoring: isLoading,
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.red, borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
             child: AnimatedPadding(
               duration: animationDuration,
               curve: animationCurve,
