@@ -102,16 +102,13 @@ class _RatingWidgetState extends State<RatingWidget> {
                     decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(20)),
                   ),
                   const SizedBox(height: 10),
-                  if (controller.ratingModel.title != null) ...{
+                  if (controller.ratingModel.title != null)
                     Text(
                       controller.ratingModel.title!,
                       style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
-                  },
                   const SizedBox(height: 10),
-                  if (controller.ratingModel.subtitle != null) ...{
-                    Text(controller.ratingModel.subtitle!),
-                  },
+                  if (controller.ratingModel.subtitle != null) Text(controller.ratingModel.subtitle!),
                   const SizedBox(height: 20),
                   AnimatedContainer(
                     duration: animationDuration,
