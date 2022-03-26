@@ -7,11 +7,24 @@ import 'widgets/criterion_button_widget.dart';
 import 'widgets/default_button.dart';
 import 'widgets/stars_widget.dart';
 
-class RatingWidget extends StatefulWidget {
+class RatingWidget<T> extends StatefulWidget {
   final RatingController controller;
-  const RatingWidget({Key? key, required this.controller, this.bodyWidget, this.getComment}) : super(key: key);
+  const RatingWidget(
+      {Key? key,
+      required this.controller,
+      this.bodyWidget,
+      this.getComment,
+      required this.future,
+      required this.errorWidget,
+      required this.loadingSkeleton,
+      required this.builder})
+      : super(key: key);
   final Widget? bodyWidget;
   final String? Function()? getComment;
+  final Future<T> future;
+  final Widget errorWidget;
+  final Widget loadingSkeleton;
+  final Widget Function(AsyncSnapshot<T> snapshot, Widget widget) builder;
   @override
   _RatingWidgetState createState() => _RatingWidgetState();
 }
@@ -80,122 +93,133 @@ class _RatingWidgetState extends State<RatingWidget> {
         const SizedBox(height: 20),
       ],
     );
-    return BlocBuilder<RatingCubit, RatingState>(
-      bloc: controller.ratingCubit,
-      buildWhen: (previous, current) => current is LoadingState || previous is LoadingState,
-      builder: (context, state) {
-        final isLoading = state is LoadingState;
-        return IgnorePointer(
-          ignoring: isLoading,
-          child: Container(
-            decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-            child: AnimatedPadding(
-              duration: animationDuration,
-              curve: animationCurve,
-              padding: EdgeInsets.symmetric(horizontal: selectedRate == 0 ? 50 : 30),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 5,
-                    width: 40,
-                    margin: const EdgeInsets.only(top: 15, bottom: 10),
-                    decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(20)),
-                  ),
-                  const SizedBox(height: 10),
-                  if (controller.ratingModel.title != null)
-                    Text(
-                      controller.ratingModel.title!,
-                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                    ),
-                  const SizedBox(height: 10),
-                  if (controller.ratingModel.subtitle != null) Text(controller.ratingModel.subtitle!),
-                  const SizedBox(height: 20),
-                  AnimatedContainer(
-                    duration: animationDuration,
-                    curve: animationCurve,
-                    width: selectedRate == 0 ? MediaQuery.of(context).size.width * 0.8 : MediaQuery.of(context).size.width * 0.4,
-                    child: FittedBox(
-                      child: StarsWidget(
-                        selectedColor: Colors.amber,
-                        selectedLenght: selectedRate,
-                        unselectedColor: Colors.grey,
-                        length: 5,
-                        onChanged: (count) {
-                          setState(() => selectedRate = count);
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  AnimatedAlign(
-                    duration: animationDuration,
-                    curve: animationCurve,
-                    alignment: Alignment.topCenter,
-                    heightFactor: selectedRate == 0 ? 0 : 1,
-                    child: AnimatedOpacity(
-                        duration: animationDuration,
-                        curve: animationCurve,
-                        opacity: selectedRate == 0 ? 0 : 1,
-                        child: widget.bodyWidget ?? defaultBody),
-                  ),
-                  Stack(
-                    children: [
-                      AnimatedOpacity(
-                        duration: animationDuration,
-                        curve: animationCurve,
-                        opacity: selectedRate == 0 ? 0 : 1,
-                        child: Center(
-                          child: DefaultButton.text(
-                            "CONFIRM",
-                            textColor: Theme.of(context).colorScheme.onPrimary,
-                            color: Theme.of(context).colorScheme.primary,
-                            outlineColor: Theme.of(context).colorScheme.primary,
-                            onPressed: () {
-                              String? comment;
-                              if (widget.getComment != null) {
-                                comment = widget.getComment!();
-                              }
-                              controller.ratingCubit.saveRate(selectedRate, comment);
-                            },
-                            isLoading: isLoading,
+    return FutureBuilder(
+        future: widget.future,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return widget.errorWidget;
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            final child = BlocBuilder<RatingCubit, RatingState>(
+              bloc: controller.ratingCubit,
+              buildWhen: (previous, current) => current is LoadingState || previous is LoadingState,
+              builder: (context, state) {
+                final isLoading = state is LoadingState;
+                return IgnorePointer(
+                  ignoring: isLoading,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                    child: AnimatedPadding(
+                      duration: animationDuration,
+                      curve: animationCurve,
+                      padding: EdgeInsets.symmetric(horizontal: selectedRate == 0 ? 50 : 30),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 40,
+                            margin: const EdgeInsets.only(top: 15, bottom: 10),
+                            decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(20)),
                           ),
-                        ),
-                      ),
-                      IgnorePointer(
-                        ignoring: selectedRate != 0,
-                        child: AnimatedOpacity(
-                          duration: animationDuration,
-                          curve: animationCurve,
-                          opacity: selectedRate == 0 ? 1 : 0,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: DefaultButton(
-                              outline: false,
-                              flat: true,
-                              color: Colors.transparent,
-                              textColor: const Color(0xFF2F333A),
-                              onPressed: () => controller.ratingCubit.ignoreForEver(),
-                              isLoading: isLoading,
-                              child: const Text(
-                                "Cancel",
-                                style: TextStyle(decoration: TextDecoration.underline, color: Colors.black54, fontSize: 12),
+                          const SizedBox(height: 10),
+                          if (controller.ratingModel.title != null)
+                            Text(
+                              controller.ratingModel.title!,
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                            ),
+                          const SizedBox(height: 10),
+                          if (controller.ratingModel.subtitle != null) Text(controller.ratingModel.subtitle!),
+                          const SizedBox(height: 20),
+                          AnimatedContainer(
+                            duration: animationDuration,
+                            curve: animationCurve,
+                            width: selectedRate == 0 ? MediaQuery.of(context).size.width * 0.8 : MediaQuery.of(context).size.width * 0.4,
+                            child: FittedBox(
+                              child: StarsWidget(
+                                selectedColor: Colors.amber,
+                                selectedLenght: selectedRate,
+                                unselectedColor: Colors.grey,
+                                length: 5,
+                                onChanged: (count) {
+                                  setState(() => selectedRate = count);
+                                },
                               ),
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 10),
+                          AnimatedAlign(
+                            duration: animationDuration,
+                            curve: animationCurve,
+                            alignment: Alignment.topCenter,
+                            heightFactor: selectedRate == 0 ? 0 : 1,
+                            child: AnimatedOpacity(
+                                duration: animationDuration,
+                                curve: animationCurve,
+                                opacity: selectedRate == 0 ? 0 : 1,
+                                child: widget.bodyWidget ?? defaultBody),
+                          ),
+                          Stack(
+                            children: [
+                              AnimatedOpacity(
+                                duration: animationDuration,
+                                curve: animationCurve,
+                                opacity: selectedRate == 0 ? 0 : 1,
+                                child: Center(
+                                  child: DefaultButton.text(
+                                    "CONFIRM",
+                                    textColor: Theme.of(context).colorScheme.onPrimary,
+                                    color: Theme.of(context).colorScheme.primary,
+                                    outlineColor: Theme.of(context).colorScheme.primary,
+                                    onPressed: () {
+                                      String? comment;
+                                      if (widget.getComment != null) {
+                                        comment = widget.getComment!();
+                                      }
+                                      controller.ratingCubit.saveRate(selectedRate, comment);
+                                    },
+                                    isLoading: isLoading,
+                                  ),
+                                ),
+                              ),
+                              IgnorePointer(
+                                ignoring: selectedRate != 0,
+                                child: AnimatedOpacity(
+                                  duration: animationDuration,
+                                  curve: animationCurve,
+                                  opacity: selectedRate == 0 ? 1 : 0,
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: DefaultButton(
+                                      outline: false,
+                                      flat: true,
+                                      color: Colors.transparent,
+                                      textColor: const Color(0xFF2F333A),
+                                      onPressed: () => controller.ratingCubit.ignoreForEver(),
+                                      isLoading: isLoading,
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(decoration: TextDecoration.underline, color: Colors.black54, fontSize: 12),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 15),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+                );
+              },
+            );
+            return widget.builder(snapshot, child);
+          }
+          return widget.loadingSkeleton;
+        });
   }
 }
