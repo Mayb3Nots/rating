@@ -9,9 +9,17 @@ import 'widgets/stars_widget.dart';
 
 class RatingWidget extends StatefulWidget {
   final RatingController controller;
-  const RatingWidget({Key? key, required this.controller, this.bodyWidget, this.getComment}) : super(key: key);
+  const RatingWidget({
+    Key? key,
+    required this.controller,
+    this.bodyWidget,
+    this.getComment,
+    this.initialRating,
+  }) : super(key: key);
   final Widget? bodyWidget;
   final String? Function()? getComment;
+  final int? initialRating;
+
   @override
   _RatingWidgetState createState() => _RatingWidgetState();
 }
@@ -26,6 +34,7 @@ class _RatingWidgetState extends State<RatingWidget> {
   @override
   void initState() {
     super.initState();
+    selectedRate = widget.initialRating ?? 0;
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       controller.listenStateChanges(context);
     });
