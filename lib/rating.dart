@@ -1,5 +1,6 @@
 library rating;
 
+export 'src/widgets/busy_indicator.dart';
 export 'src/models/rating_config_model.dart';
 export 'src/models/rating_criterion_model.dart';
 export 'src/models/rating_model.dart';
