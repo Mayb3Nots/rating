@@ -35,7 +35,7 @@ class _RatingWidgetState extends State<RatingWidget> {
   void initState() {
     super.initState();
     selectedRate = widget.initialRating ?? 0;
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.listenStateChanges(context);
     });
   }
