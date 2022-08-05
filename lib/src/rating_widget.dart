@@ -184,6 +184,7 @@ class _RatingWidgetState extends State<RatingWidget> {
                             child: DefaultButton(
                               outline: false,
                               flat: true,
+                              outlineColor: Theme.of(context).colorScheme.onBackground,
                               color: Colors.transparent,
                               textColor: Theme.of(context).colorScheme.onBackground,
                               onPressed: () => controller.ratingCubit.ignoreForEver(),
