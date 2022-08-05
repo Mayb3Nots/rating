@@ -185,12 +185,13 @@ class _RatingWidgetState extends State<RatingWidget> {
                               outline: false,
                               flat: true,
                               color: Colors.transparent,
-                              textColor: const Color(0xFF2F333A),
+                              textColor: Theme.of(context).colorScheme.onBackground,
                               onPressed: () => controller.ratingCubit.ignoreForEver(),
                               isLoading: isLoading,
-                              child: const Text(
+                              child: Text(
                                 "Cancel",
-                                style: TextStyle(decoration: TextDecoration.underline, color: Colors.black54, fontSize: 12),
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline, color: Theme.of(context).colorScheme.onBackground, fontSize: 12),
                               ),
                             ),
                           ),
