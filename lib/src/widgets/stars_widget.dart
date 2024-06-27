@@ -40,7 +40,7 @@ class _StarsWidgetState extends State<StarsWidget> {
             padding: const EdgeInsets.only(bottom: 5),
             child: Text(
               widget.title!,
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
         Row(
@@ -72,7 +72,7 @@ class _StarsWidgetState extends State<StarsWidget> {
                     size: widget.iconSize,
                     color: selected
                         ? (widget.selectedColor ?? Theme.of(context).colorScheme.secondary)
-                        : widget.unselectedColor ?? Theme.of(context).textTheme.headline5?.color,
+                        : widget.unselectedColor ?? Theme.of(context).textTheme.displayMedium?.color,
                   ),
                 ),
               );
